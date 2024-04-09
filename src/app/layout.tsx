@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Header from "@/componens/header";
 import Link from 'next/link'
 import "./globals.css";
 
@@ -15,36 +16,38 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <header className="text-center">
-          <h1 className="text-4xl font-bold my-3">Рецепти</h1>
-          <nav className="flex justify-center space-x-4">
-            <div>
-              <Link href="/">Усі</Link>
-            </div>
-            <div>
-              <Link href="/pershi-stravy">Перші Страви</Link>
-            </div> 
-            <div>
-              
-              <Link href="/drugi-stravy">Другі Страви</Link>
-            </div> 
-            <div>
-              <Link href="/salaty-ta-zakusky">Салати та Закуски</Link>
-            </div> 
-            <div>
-              <Link href="/vipechka">Випічка</Link>
-            </div> 
-            <div>
-              <Link href="/torty">Торти</Link>
-            </div> 
-            <div>              
-              <Link href="/deserty">Десерти</Link>
-            </div> 
-            <div>
-              <Link href="/napoi">Напої</Link>
-            </div>                                                                        
-          </nav>
+        <header>
+          <Header/>
         </header>
+
+        <h1 className="text-4xl font-bold my-3 text-center">Рецепти</h1>
+        <nav className="flex justify-center space-x-4">
+          <div>
+            <Link href="/">Усі</Link>
+          </div>
+          <div>
+            <Link href="/pershi-stravy">Перші Страви</Link>
+          </div> 
+          <div>
+            
+            <Link href="/drugi-stravy">Другі Страви</Link>
+          </div> 
+          <div>
+            <Link href="/salaty-ta-zakusky">Салати та Закуски</Link>
+          </div> 
+          <div>
+            <Link href="/vipechka">Випічка</Link>
+          </div> 
+          <div>
+            <Link href="/torty">Торти</Link>
+          </div> 
+          <div>              
+            <Link href="/deserty">Десерти</Link>
+          </div> 
+          <div>
+            <Link href="/napoi">Напої</Link>
+          </div>                                                                        
+        </nav>
         {children}
       </body>
     </html>

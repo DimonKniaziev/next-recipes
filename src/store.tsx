@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 interface IRecipes {
-    id: number
+    id: number,
     label: string,
     ingredients: string[],
     instruction: string[],
@@ -12,6 +12,26 @@ interface IRecipes {
 interface IRecipesState {    
     recipes: IRecipes[]    
 }
+
+interface IUser {
+    id: string | null,
+    email: string | null,
+    name: string | null
+}
+
+interface IUserState {
+    loggedUser: IUser | null
+    login: (user: IUser) => void
+    logout: () => void
+}
+
+const useUser = create<IUserState>()(
+    set => ({
+        loggedUser: null,
+        login: (user: IUser) => set(() => ({loggedUser : user})),
+        logout: () => set(() => ({loggedUser : null}))
+    })
+)
 
 const useRecipes = create<IRecipesState>()(
     set => ({        
@@ -221,4 +241,4 @@ const useRecipes = create<IRecipesState>()(
     })   
 )
 
-export {useRecipes};
+export {useRecipes, useUser};
