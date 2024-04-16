@@ -2,7 +2,7 @@
 
 import React from "react";
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { useRecipes, useUser } from "@/store";
+import { useUser } from "@/store";
 import { auth } from "@/firebase";
 
 const Header: React.FC = () => {
