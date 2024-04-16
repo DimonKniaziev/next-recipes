@@ -1,9 +1,9 @@
 "use client"
 
-import React, { useState } from "react";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { useUser } from "@/store";
-import { auth } from "@/firebase"
+import React from "react";
+import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import { useRecipes, useUser } from "@/store";
+import { auth } from "@/firebase";
 
 const Header: React.FC = () => {
     const user = useUser(state => state.loggedUser);
@@ -12,28 +12,18 @@ const Header: React.FC = () => {
     
     const provider = new GoogleAuthProvider();
 
-    const onLogin = () => {
+    const onLogin = async () => {
         signInWithPopup(auth, provider)
         .then((result) => {
             const credential = GoogleAuthProvider.credentialFromResult(result);
-            const token = credential?.accessToken;
             const user = result.user;
             login({id: user.uid, email: user.email, name: user.displayName})
-        }).catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            const email = error.customData.email;
-            const credential = GoogleAuthProvider.credentialFromError(error);
-        }); 
+        })   
     }
 
     const onLogout = () => {
         logout();
-        signOut(auth).then(() => {
-            
-        }).catch((error) => {
-           
-        });
+        signOut(auth);
     }
 
     const LoginButton = () => {
