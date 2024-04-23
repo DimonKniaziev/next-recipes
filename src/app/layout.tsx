@@ -15,39 +15,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+        />
+      </head>
       <body>
         <header>
           <Header/>
-        </header>
-
-        <h1 className="text-4xl font-bold my-3 text-center">Рецепти</h1>
-        <nav className="flex justify-center space-x-4">
-          <div>
-            <Link href="/">Усі</Link>
-          </div>
-          <div>
-            <Link href="/pershi-stravy">Перші Страви</Link>
-          </div> 
-          <div>
-            
-            <Link href="/drugi-stravy">Другі Страви</Link>
-          </div> 
-          <div>
-            <Link href="/salaty-ta-zakusky">Салати та Закуски</Link>
-          </div> 
-          <div>
-            <Link href="/vipechka">Випічка</Link>
-          </div> 
-          <div>
-            <Link href="/torty">Торти</Link>
-          </div> 
-          <div>              
-            <Link href="/deserty">Десерти</Link>
-          </div> 
-          <div>
-            <Link href="/napoi">Напої</Link>
-          </div>                                                                        
-        </nav>
+        </header>        
         {children}
       </body>
     </html>

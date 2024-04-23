@@ -24,5 +24,6 @@ export interface ILikes {
 export interface IUser {
     id: string | null,
     email: string | null,
-    name: string | null
+    name: string | null,
+    photoURL: string | null
 }
