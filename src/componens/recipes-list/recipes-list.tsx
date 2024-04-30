@@ -6,6 +6,8 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import RecipesListItem from "../recipes-list-item";
 import { db } from "@/firebase";
 import { IRecipes } from "@/interfaces";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import { Container } from "@mui/material";
 
 interface IRecipesList {
     category: string;
@@ -15,7 +17,6 @@ const RecipesList: React.FC<IRecipesList> = ({category}) => {
     const [recipesList, setRecipesList] = useState<IRecipes[]>([]);
     
     useEffect(() => {
-        console.log("effected");
         loadData();
     }, [])
 
@@ -40,7 +41,6 @@ const RecipesList: React.FC<IRecipesList> = ({category}) => {
                     imageId: doc.data().imageId
                 };
             }))
-            console.log(recipes);
             setRecipesList(recipes);
         } catch (error) {
             console.error(error);
@@ -51,16 +51,20 @@ const RecipesList: React.FC<IRecipesList> = ({category}) => {
         const {id, category, ...itemProps} = item;
         
         return (
-            <Link href={`/${category}/${id}`} key={id}>
-                <RecipesListItem {...itemProps}/>
-            </Link>                 
+            <Grid2 xs={12} sm={6} md={4} lg={3}>
+                <Link href={`/${category}/${id}`} key={id}>
+                    <RecipesListItem {...itemProps}/>
+                </Link>
+            </Grid2>
         );
     });
 
     return (
-        <div className="tour-list">                                
-            {recipesItems}
-        </div>        
+        <Container>
+            <Grid2 container spacing={3}>                                
+                {recipesItems}
+            </Grid2>   
+        </Container>     
     )    
 }
 

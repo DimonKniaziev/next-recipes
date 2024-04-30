@@ -1,4 +1,7 @@
-import React from "react";
+import { storage } from "@/firebase";
+import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
+import { getDownloadURL, ref } from "firebase/storage";
+import React, { useEffect, useState } from "react";
 
 interface IRecipesListItem {
     label: string,
@@ -6,16 +9,37 @@ interface IRecipesListItem {
 }
 
 const RecipesListItem: React.FC<IRecipesListItem> = ({label, imageId}) => {
-    return (        
-        <div className="recipes-list-item">
-            <div className="recipes-list-item-image-container">
-                <span>{imageId}</span>
-            </div>
-            <div className="recipes-list-item-label-container">
-                <span className="recipes-list-item-name">{label}</span>
-            </div>
-        </div>
-    )
+  const [image, setImage] = useState<string|null>(null);
+  useEffect(() => {
+    getImage();
+  })
+
+  const getImage = async() => {
+    await getDownloadURL(ref(storage, `recipes-images/${imageId}.png`))
+    .then((url) => {
+      setImage(url);
+    })
+  }
+
+  return (
+    <Card
+     sx={{ border: 0, boxShadow: 0}}
+    >
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          sx={{ borderRadius: "3%" }}
+          image={image ? image : '#'}
+          title={label}
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h6" component="div">
+            {label}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  );
 }
 
 export default RecipesListItem;
