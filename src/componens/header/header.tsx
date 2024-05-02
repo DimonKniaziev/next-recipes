@@ -70,7 +70,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{mb: 5}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <FlatwareTwoToneIcon fontSize="large" sx={{ color: "yellow", mr: 1 }}/>
@@ -89,14 +89,16 @@ const Header: React.FC = () => {
           >
             <Link href="/">NEXT-RECIPES</Link>
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, my: 2 }}>
             {pages.map((page) => (
+              <Link href={page.link} key={page.link}>
               <Button
                 key={page.link}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{color: 'white', display: 'block' }}                
               >
-                <Link href={page.link}>{page.label}</Link>
+                {page.label}
               </Button>
+              </Link>
             ))}
           </Box>
 
