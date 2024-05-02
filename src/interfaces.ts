@@ -11,12 +11,13 @@ export interface IComments {
     id: string,
     recipeId: string,
     userId: string,
-    userName: string
+    userName: string,
+    userAvatar: string | null,
     text: string
 }
 
 export interface ILikes {
-    id: string
+    id: string,
     userId: string,
     recipeId: string
 }
