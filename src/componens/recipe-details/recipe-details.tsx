@@ -12,6 +12,7 @@ import { Alert, Avatar, Badge, BottomNavigationAction, Box, Button, CardMedia, C
 import { getDownloadURL, ref } from "firebase/storage";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import Image from "next/image";
 
 interface IRecipeDetails {
     recipeId: string;
@@ -209,27 +210,36 @@ const RecipeDetails: React.FC<IRecipeDetails> = ({recipeId}) => {
     })
 
     const CommentForm: React.FC = () => {
-        return (
-            <form onSubmit={handleSubmit(onSubmit)} className='shipping-form'>
-                <TextField
-                    {...register('text')}
-                    error={errors.text ? true : false}
-                    id="outlined-required"
-                    label="Коментар"
-                    helperText={errors.text ? errors.text.message : null}
-                    fullWidth
-                    sx={{mb: 1}}
-                />
-                <Button 
-                    variant="outlined"
-                    color="success"
-                    type="submit"
-                    fullWidth
-                >
-                    Коментувати
-                </Button>
-            </form>
-        )
+        if (loggedUser) {        
+            return (
+                <form onSubmit={handleSubmit(onSubmit)} className='shipping-form'>
+                    <TextField
+                        {...register('text')}
+                        error={errors.text ? true : false}
+                        id="outlined-required"
+                        label="Коментар"
+                        helperText={errors.text ? errors.text.message : null}
+                        fullWidth
+                        sx={{mb: 1}}
+                    />
+                    <Button 
+                        variant="outlined"
+                        color="success"
+                        type="submit"
+                        fullWidth
+                    >
+                        Коментувати
+                    </Button>
+                </form>
+            )
+        }
+        else {
+            return (
+                <Alert severity="warning">
+                    Щоб залишити коментар, увійдіть в систему.
+                </Alert>
+            )
+        }
     }
 
     const commentsList = comments.map(item => {
@@ -254,11 +264,13 @@ const RecipeDetails: React.FC<IRecipeDetails> = ({recipeId}) => {
     const likeAlertProp = loggedUser ? "none" : showAlert
     
     return (
-        <Container maxWidth="md" sx={{ alignContent: "center"}}>  
-            <CardMedia
-                image={image ? image : '#'}
-                component="img"
-                sx={{borderRadius: "3%"}}
+        <Container maxWidth="md" sx={{ alignContent: "center"}}>
+            <Image 
+            src={image ? image : "/#"}
+            alt={recipe ? recipe.label : "recipe"}
+            width={750}
+            height={500}
+            style={{borderRadius: "3%"}}
             />
             <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", mt: 2 }}>
                 <Typography
