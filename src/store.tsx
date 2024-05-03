@@ -1,14 +1,6 @@
 import { create } from "zustand";
 import { IComments, ILikes, IRecipes, IUser } from "./interfaces";
-
-
-
-interface IRecipesState {    
-    recipes: IRecipes[],
-    comments: IComments[],
-    likes: ILikes[],
-    setLike: (like: ILikes) => void
-}
+import { persist } from "zustand/middleware";
 
 interface IUserState {
     loggedUser: IUser | null
@@ -17,11 +9,16 @@ interface IUserState {
 }
 
 const useUser = create<IUserState>()(
-    set => ({
-        loggedUser: null,
-        login: (user: IUser) => set(() => ({loggedUser : user})),
-        logout: () => set(() => ({loggedUser : null}))
-    })
+    persist(
+        set => ({
+            loggedUser: null,
+            login: (user: IUser) => set(() => ({loggedUser : user})),
+            logout: () => set(() => ({loggedUser : null}))
+        }),
+        {
+            name: 'logged-user-storage'
+        }
+    )
 )
 
 export {useUser};
