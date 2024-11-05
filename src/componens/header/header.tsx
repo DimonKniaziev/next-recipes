@@ -12,27 +12,27 @@ import MenuIcon from '@mui/icons-material/Menu';
 const pages = [
   {
     label: 'Перші Страви',
-    link: '/pershi-stravy'
+    link: '/category/pershi-stravy'
   },
   {
     label: 'Другі Страви',
-    link: '/drugi-stravy'
+    link: '/category/drugi-stravy'
   },
   {
     label: 'Салати та закуски',
-    link: '/salaty-ta-zakusky'
+    link: '/category/salaty-ta-zakusky'
   },
   {
     label: 'Випічка',
-    link: '/vipechka'
+    link: '/category/vipechka'
   },
   {
     label: 'Торти',
-    link: '/torty'
+    link: '/category/torty'
   },
   {
     label: 'Напої',
-    link: '/napoi'
+    link: '/category/napoi'
   }
 ];
 
@@ -67,7 +67,7 @@ const Header: React.FC = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, my: 2 }}>
             {pages.map((page) => (
-              <Link href={page.link} key={page.link}>
+              <Link href={`${page.link}`} key={page.link}>
               <Button
                 key={page.link}
                 sx={{color: 'white', display: 'block', fontSize: 12 }}                

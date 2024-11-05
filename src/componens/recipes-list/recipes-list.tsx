@@ -48,11 +48,11 @@ const RecipesList: React.FC<IRecipesList> = ({category}) => {
     }
     
     const recipesItems = recipesList.map((item) => {
-        const {id, category, ...itemProps} = item;
+        const {id, ...itemProps} = item;
         
         return (
             <Grid2 xs={12} sm={6} md={4} lg={3}>
-                <Link href={`/${category}/${id}`} key={id}>
+                <Link href={`/id/${id}`} key={id}>
                     <RecipesListItem {...itemProps}/>
                 </Link>
             </Grid2>
