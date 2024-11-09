@@ -10,8 +10,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -24,7 +26,8 @@ export default function RootLayout({
       <body>
         <header>
           <Header/>
-        </header>        
+        </header>
+        {modal}     
         {children}
       </body>
     </html>
