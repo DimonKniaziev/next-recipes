@@ -1,9 +1,15 @@
 import RecipeDetails from "@/componens/recipe-details"
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+    params,
+  }: {
+    params: Promise<{ id: string }>
+  }) {
+    const id = (await params).id
+
     return (
         <div>
-            <RecipeDetails recipeId={params.id}/>
+            <RecipeDetails recipeId={id}/>
         </div>
     )
 }

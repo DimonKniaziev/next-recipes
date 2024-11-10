@@ -2,6 +2,7 @@ import { storage } from "@/firebase";
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import { getDownloadURL, ref } from "firebase/storage";
 import React, { useEffect, useState } from "react";
+import recipeImagePlaceholder from "@/images";
 
 interface IRecipesListItem {
     label: string,
@@ -9,17 +10,19 @@ interface IRecipesListItem {
 }
 
 const RecipesListItem: React.FC<IRecipesListItem> = ({label, imageId}) => {
-  const [image, setImage] = useState<string|null>(null);
+  const [image, setImage] = useState<string>();
   useEffect(() => {
     getImage();
   })
 
   const getImage = async() => {
-    await getDownloadURL(ref(storage, `recipes-images/${imageId}.png`))
-    .then((url) => {
+    try {
+      const url = await getDownloadURL(ref(storage, `recipes-images/${imageId}.png`));
       setImage(url);
-    })
-  }
+    } catch (error) {
+      setImage(recipeImagePlaceholder.src);
+    }
+  };
 
   return (
     <Card
@@ -29,7 +32,7 @@ const RecipesListItem: React.FC<IRecipesListItem> = ({label, imageId}) => {
         <CardMedia
           component="img"
           sx={{ borderRadius: "3%" }}
-          image={image ? image : '#'}
+          image = { image }
           title={label}
         />
         <CardContent>
