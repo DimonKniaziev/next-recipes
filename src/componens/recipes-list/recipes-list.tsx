@@ -51,8 +51,8 @@ const RecipesList: React.FC<IRecipesList> = ({category}) => {
         const {id, ...itemProps} = item;
         
         return (
-            <Grid2 xs={12} sm={6} md={4} lg={3}>
-                <Link href={`/id/${id}`} key={id}>
+            <Grid2 xs={12} sm={6} md={4} lg={3}key={id}>
+                <Link href={`/id/${id}`}>
                     <RecipesListItem {...itemProps}/>
                 </Link>
             </Grid2>
