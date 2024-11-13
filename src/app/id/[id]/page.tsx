@@ -1,4 +1,4 @@
-import RecipeDetails from "@/componens/recipe-details"
+import { RecipeDetails } from "@/componens/recipe-details"
 
 export default async function Page({
     params,
@@ -6,6 +6,9 @@ export default async function Page({
     params: Promise<{ id: string }>
   }) {
     const id = (await params).id
+
+    // url = await....
+
 
     return (
         <div>

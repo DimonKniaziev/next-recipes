@@ -1,3 +1,4 @@
 import RecipeDetails from "./recipe-details";
+import RecipeDetailsModal from "./recipeDetailsModal";
 
-export default RecipeDetails
+export {RecipeDetails, RecipeDetailsModal};
