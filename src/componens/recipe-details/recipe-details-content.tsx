@@ -13,7 +13,8 @@ import { getDownloadURL, ref } from "firebase/storage";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Image from "next/image";
-import recipeImagePlaceholder from "@/images";
+import recipeImagePlaceholder from "@/images/recipeImagePlaceholder.png";
+import { StaticImageData } from "next/image";
 
 interface IRecipeDetails {
     recipeId: string;
@@ -29,7 +30,7 @@ const RecipeDetailsContent: React.FC<IRecipeDetails> = ({recipeId}) => {
     const [recipe, setRecipe] = useState<IRecipes>();
     const [likes, setLikes] = useState<ILikes[]>([]);
     const [comments, setComments] = useState<IComments[]>([]);
-    const [image, setImage] = useState<string|null>(null);
+    const [image, setImage] = useState<StaticImageData|null>(null);
     const [showAlert, setShowAlert] = useState<string>("none");
 
     const loggedUser = useUser(state => state.loggedUser);
@@ -75,10 +76,9 @@ const RecipeDetailsContent: React.FC<IRecipeDetails> = ({recipeId}) => {
 
     const getImage = async() => {
         try {
-          const url = await getDownloadURL(ref(storage, `recipes-images/${recipe?.imageId}.png`));
-          setImage(url);
+            const url = await getDownloadURL(ref(storage, `recipes-images/${recipe?.imageId}.png`))
         } catch (error) {
-          setImage(recipeImagePlaceholder.src);
+            setImage(recipeImagePlaceholder);
         }
       };
 
@@ -262,7 +262,7 @@ const RecipeDetailsContent: React.FC<IRecipeDetails> = ({recipeId}) => {
             </ListItem>
         )
     })
-
+     
     const likeAlertProp = loggedUser ? "none" : showAlert
     
     return (

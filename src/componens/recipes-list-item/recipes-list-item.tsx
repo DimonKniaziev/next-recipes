@@ -2,7 +2,7 @@ import { storage } from "@/firebase";
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
 import { getDownloadURL, ref } from "firebase/storage";
 import React, { useEffect, useState } from "react";
-import recipeImagePlaceholder from "@/images";
+import recipeImagePlaceholder from "@/images/recipeImagePlaceholder.png";
 
 interface IRecipesListItem {
     label: string,
