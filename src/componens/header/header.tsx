@@ -149,7 +149,12 @@ const MobileLinkMenu: React.FC = () => {
   const [linkMenu, setLinkMenu] = React.useState<null | HTMLElement>(null);  
 
   const handleUserIconClick = (event: React.MouseEvent<HTMLElement>) => {
-    setLinkMenu(event.currentTarget); 
+    if(linkMenu) {
+      setLinkMenu(null);
+    }
+    else {
+      setLinkMenu(event.currentTarget); 
+    }    
   }
   const handleCloseUserMenu = () => {
     setLinkMenu(null);
