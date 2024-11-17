@@ -1,9 +1,17 @@
 import RecipesList from "@/componens/recipes-list"
+import { getRecipesListByCategory } from "@/services/firebase-service";
 
-export default function Page({ params }: { params: { category: string } }) {
+export default async function Page({
+    params,
+  }: {
+    params: Promise<{ category: string }>
+  }) {
+    const category = (await params).category
+
+    const recipes = await getRecipesListByCategory(category);
     return (
         <div>
-            <RecipesList category={params.category}/>
+            <RecipesList recipes={recipes}/>
         </div>
     )
 }

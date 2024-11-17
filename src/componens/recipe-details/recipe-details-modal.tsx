@@ -4,16 +4,19 @@ import React from "react";
 import { useRouter } from 'next/navigation'
 import { Modal, Container} from "@mui/material";
 import RecipeDetailsContent from "./recipe-details-content";
+import { IRecipeData } from "@/interfaces";
 
-interface IRecipeDetails {
-    recipeId: string;
+interface IRecipeDetailsModal {
+    recipeData: IRecipeData | null;
 }
 
-const RecipeDetailsModal: React.FC<IRecipeDetails> = ({recipeId}) => {   
+const RecipeDetailsModal: React.FC<IRecipeDetailsModal> = ({recipeData}) => {
     const router = useRouter()
     const handleCloseModal = () => {
         router.back()
     }
+
+    const content = recipeData ? <RecipeDetailsContent recipeData={recipeData}/> : <span>РЕЦЕПТ НЕ ЗНАЙДЕНО</span>
     
     return (
         <Modal
@@ -36,7 +39,7 @@ const RecipeDetailsModal: React.FC<IRecipeDetails> = ({recipeId}) => {
                     }}
                 
                 >
-                <RecipeDetailsContent recipeId={recipeId}/>
+                {content}
             </Container>
         </Modal>    
     )    

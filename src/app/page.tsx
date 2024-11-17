@@ -1,9 +1,11 @@
 import RecipesList from "@/componens/recipes-list";
+import { getRecipesListByCategory } from "@/services/firebase-service";
 
-export default function Home() {
+export default async function Home() {
+  const recipes = await getRecipesListByCategory("");
   return (
     <div>
-      <RecipesList category=""/>
+      <RecipesList recipes={recipes}/>
     </div>
   );
 }

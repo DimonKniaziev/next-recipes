@@ -1,23 +1,20 @@
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useUser } from "@/store";
-import { IComments, ILikes, IRecipes } from "@/interfaces";
-import { db, storage } from "@/firebase";
-import { collection, query, doc, getDoc, where, getDocs, addDoc, deleteDoc } from "firebase/firestore";
+import { IComments, ILikes, IRecipeData } from "@/interfaces";
 import { InferType, object, string } from "yup";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Alert, Avatar, Badge, BottomNavigationAction, Box, Button, CardMedia, Container, IconButton, List, ListItem, ListItemAvatar, ListItemText, Stack, TextField, Typography } from "@mui/material";
-import { getDownloadURL, ref } from "firebase/storage";
+import { Alert, Avatar, Badge, Box, Button, IconButton, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Image from "next/image";
-import recipeImagePlaceholder from "@/images/recipeImagePlaceholder.png";
-import { StaticImageData } from "next/image";
+import recipeImagePlaceholder  from "@/images/recipeImagePlaceholder.png";
+import { setLikeToRecipe, setCommentToRecipe, deleteLikeFromRecipe } from "@/services/firebase-service";
 
-interface IRecipeDetails {
-    recipeId: string;
+interface IRecipeDetailsContent {
+    recipeData: IRecipeData;
 }
 
 let fieldsSchema = object({
@@ -26,11 +23,11 @@ let fieldsSchema = object({
 
 interface IFields extends InferType<typeof fieldsSchema>{};
 
-const RecipeDetailsContent: React.FC<IRecipeDetails> = ({recipeId}) => {
-    const [recipe, setRecipe] = useState<IRecipes>();
-    const [likes, setLikes] = useState<ILikes[]>([]);
-    const [comments, setComments] = useState<IComments[]>([]);
-    const [image, setImage] = useState<StaticImageData|null>(null);
+const RecipeDetailsContent: React.FC<IRecipeDetailsContent> = ({recipeData}) => {
+    const {recipe, likes, comments, image} = recipeData;
+
+    const [localLikes, setLocalLikes] = useState<ILikes[]>(likes);
+    const [localComments, setLocalComments] = useState<IComments[]>(comments);
     const [showAlert, setShowAlert] = useState<string>("none");
 
     const loggedUser = useUser(state => state.loggedUser);
@@ -40,122 +37,34 @@ const RecipeDetailsContent: React.FC<IRecipeDetails> = ({recipeId}) => {
         handleSubmit,
         formState: {errors},
         reset,
-        setValue,
-        control
       } = useForm<IFields>({
         mode: 'onSubmit',
         resolver: yupResolver(fieldsSchema)
     });
 
-    useEffect(() => {
-        loadRecipe();
-        getImage();
-        loadLikes();
-        loadComments();
-    }, [])
-
-    const loadRecipe = async() => {
-        const docRef = doc(db, "recipes", recipeId);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            const recipe = {
-                id: recipeId,
-                label: docSnap.data().label,
-                ingredients: docSnap.data().ingredients,
-                instruction: docSnap.data().instruction,
-                category: docSnap.data().category,
-                imageId: docSnap.data().imageId
-            }
-
-            setRecipe(recipe);
-        } else {
-            console.log("No such document!");
-        }
-    }
-
-    const getImage = async() => {
-        try {
-            const url = await getDownloadURL(ref(storage, `recipes-images/${recipe?.imageId}.png`))
-        } catch (error) {
-            setImage(recipeImagePlaceholder);
-        }
-      };
-
-    const loadLikes = async() => {        
-        const likesQuery =  query(collection(db, "likes"), where('recipeId', '==', recipeId));
-
-        try {
-            const {docs} = await getDocs(likesQuery);
-    
-            const likes = (docs.map((doc) => {
-                const id = doc.id;
-                return {
-                    id,
-                    userId: doc.data().userId,
-                    recipeId: doc.data().recipeId
-                };
-            }))
-            setLikes(likes);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    const loadComments = async() => {        
-        const commentsQuery =  query(collection(db, "comments"), where('recipeId', '==', recipeId));
-
-        try {
-            const {docs} = await getDocs(commentsQuery);
-    
-            const comments = (docs.map((doc) => {
-                const id = doc.id;
-                return {
-                    id,
-                    recipeId: doc.data().recipeId,
-                    userId: doc.data().userId,
-                    userName: doc.data().userName,
-                    userAvatar: doc.data().userAvatar,
-                    text: doc.data().text
-                };
-            }))
-            setComments(comments);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     const onLike = async() => {
         if(loggedUser?.id) {
-            const docRef = await addDoc(collection(db, "likes"), {
-                userId: loggedUser.id,
-                recipeId: recipeId
-            });
-            setLikes([...likes, {id: docRef.id, userId: loggedUser.id, recipeId: recipeId}])
+            const newLikeId = await setLikeToRecipe(recipe.id, loggedUser.id)
+            setLocalLikes([...likes, {id: newLikeId, userId: loggedUser.id, recipeId: recipe.id}])
         }
     }
 
     const onUnlike = async() => {        
         if(loggedUser?.id) {
-            const deletedLike = likes.find(item => item.userId === loggedUser.id && item.recipeId === recipeId);
+            const deletedLike = localLikes.find(item => item.userId === loggedUser.id && item.recipeId === recipe.id);
             if(deletedLike) {
-                await deleteDoc(doc(db, "likes", deletedLike.id));
+                await deleteLikeFromRecipe(deletedLike.id)
                 const index = likes.findIndex(item => item.id === deletedLike.id);
                 const newLikes = [...likes.slice(0, index), ...likes.slice(index+1)];
-                setLikes(newLikes);
+                setLocalLikes(newLikes);
             }
         }
     }
 
     const setComment = async(text: string) => {
         if(loggedUser?.id && loggedUser?.name) {
-            const docRef = await addDoc(collection(db, "comments"), {
-                userId: loggedUser.id,
-                recipeId: recipeId,
-                userName: loggedUser.name,
-                text: text
-            });
-            setComments([...comments, {id: docRef.id, userId: loggedUser.id, userName: loggedUser.name, userAvatar: loggedUser.photoURL, recipeId: recipeId, text: text}])
+            const newCommentId = await setCommentToRecipe(recipe.id, loggedUser.id, loggedUser.name, text)
+            setLocalComments([...comments, {id: newCommentId, userId: loggedUser.id, userName: loggedUser.name, userAvatar: loggedUser.photoURL, recipeId: recipe.id, text: text}])
         }
     }
 
@@ -187,7 +96,7 @@ const RecipeDetailsContent: React.FC<IRecipeDetails> = ({recipeId}) => {
         )
     }
 
-    const ingredientsList = recipe?.ingredients.map(item => {
+    const ingredientsList = recipe.ingredients.map(item => {
         const index = recipe.ingredients.findIndex(ingredient => ingredient === item);
 
         return (
@@ -199,7 +108,7 @@ const RecipeDetailsContent: React.FC<IRecipeDetails> = ({recipeId}) => {
         )
     })
 
-    const instructionsList = recipe?.instruction.map(item => {
+    const instructionsList = recipe.instruction.map(item => {
         const index = recipe.instruction.findIndex(instruction => instruction === item);
 
         return (
@@ -244,7 +153,7 @@ const RecipeDetailsContent: React.FC<IRecipeDetails> = ({recipeId}) => {
         }
     }
 
-    const commentsList = comments.map(item => {
+    const commentsList = localComments.map(item => {
         const commentOwner = item.userId === loggedUser?.id ? "Ваш коментар" : item.userName
         return (
             <ListItem alignItems="flex-start" key={item.id}>
@@ -268,11 +177,12 @@ const RecipeDetailsContent: React.FC<IRecipeDetails> = ({recipeId}) => {
     return (
         <React.Fragment>
             <Image 
-            src={image ? image : "/#"}
+            src={image ? image : recipeImagePlaceholder}
             alt={recipe ? recipe.label : "recipe"}
             width={750}
             height={500}
-            style={{borderRadius: "3%"}}
+            style={{borderRadius: "3%", margin: "auto"}}
+            priority
             />
             <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", mt: 2 }}>
                 <Typography

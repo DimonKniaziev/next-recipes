@@ -1,4 +1,4 @@
-export interface IRecipes {
+export interface IRecipe {
     id: string,
     label: string,
     ingredients: string[],
@@ -27,4 +27,11 @@ export interface IUser {
     email: string | null,
     name: string | null,
     photoURL: string | null
+}
+
+export interface IRecipeData {
+    recipe: IRecipe,
+    likes: ILikes[],
+    comments: IComments[],
+    image: string | null
 }

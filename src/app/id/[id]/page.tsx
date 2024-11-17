@@ -1,18 +1,18 @@
 import { RecipeDetails } from "@/componens/recipe-details"
+import { getRecipeData } from "@/services/firebase-service";
 
 export default async function Page({
     params,
   }: {
     params: Promise<{ id: string }>
   }) {
-    const id = (await params).id
+    const recipeId = (await params).id
 
-    // url = await....
-
+    const recipeData = await getRecipeData(recipeId);
 
     return (
         <div>
-            <RecipeDetails recipeId={id}/>
+            <RecipeDetails recipeData={recipeData}/>
         </div>
     )
 }
