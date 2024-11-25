@@ -79,7 +79,7 @@ const RecipeDetailsContent: React.FC<IRecipeDetailsContent> = ({recipeData}) => 
     }
     
     const LikeButton: React.FC = () => {
-        const isLiked = likes.find(item => item.userId === loggedUser?.id);
+        const isLiked = localLikes.find(item => item.userId === loggedUser?.id);
         const clickFunction = loggedUser ? isLiked ? () => onUnlike() : () => onLike() : () => onShowAlert();
         const icon = isLiked ? <FavoriteIcon /> : <FavoriteBorderIcon/>
 
@@ -89,7 +89,7 @@ const RecipeDetailsContent: React.FC<IRecipeDetailsContent> = ({recipeData}) => 
                 color="inherit"
                 onClick={clickFunction}
             >
-                <Badge badgeContent={likes.length} color="error">
+                <Badge badgeContent={localLikes.length} color="error">
                     {icon}
                 </Badge>
             </IconButton>
