@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { IComments, ILikes, IRecipes, IUser } from "./interfaces";
+import { IUser } from "./interfaces";
 import { persist } from "zustand/middleware";
 
 interface IUserState {

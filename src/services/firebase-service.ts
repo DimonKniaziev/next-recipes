@@ -1,9 +1,10 @@
+import { cache } from 'react'
 import { db, storage } from "@/firebase";
 import { collection, query, doc, getDoc, where, getDocs, addDoc, deleteDoc } from "firebase/firestore";
 import { IComments, ILikes, IRecipe, IRecipeData } from "@/interfaces";
 import { getDownloadURL, ref } from "firebase/storage";
 
-export const getRecipeData = async(recipeId: string) : Promise<IRecipeData | null> => {
+export const getRecipeData = cache(async(recipeId: string) : Promise<IRecipeData | null> => {
     const recipe = await getRecipeById(recipeId);
     
     if (recipe) {
@@ -21,7 +22,7 @@ export const getRecipeData = async(recipeId: string) : Promise<IRecipeData | nul
     else {
         return null
     }
-}
+})
 
 export const getRecipeById = async(recipeId: string) : Promise<IRecipe | null> => {
     const docRef = doc(db, "recipes", recipeId);

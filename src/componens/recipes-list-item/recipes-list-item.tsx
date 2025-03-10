@@ -1,7 +1,5 @@
-import { storage } from "@/firebase";
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
-import { getDownloadURL, ref } from "firebase/storage";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import recipeImagePlaceholder from "@/images/recipeImagePlaceholder.png";
 import { getRecipeImageById } from "@/services/firebase-service";
 
@@ -11,20 +9,6 @@ interface IRecipesListItem {
 }
 
 const RecipesListItem: React.FC<IRecipesListItem> = async ({label, imageId}) => {
-  // const [image, setImage] = useState<string>();
-  // useEffect(() => {
-  //   getImage();
-  // })
-
-  // const getImage = async() => {
-  //   try {
-  //     const url = await getDownloadURL(ref(storage, `recipes-images/${imageId}.png`));
-  //     setImage(url);
-  //   } catch (error) {
-  //     setImage(recipeImagePlaceholder.src);
-  //   }
-  // };
-
   const image = await getRecipeImageById(imageId);
 
   return (

@@ -67,7 +67,7 @@ const Header: React.FC = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, my: 2 }}>
             {pages.map((page) => (
-              <Link href={`${page.link}`} key={page.link}>
+              <Link href={`${page.link}`} key={page.link} prefetch={false}>
               <Button
                 key={page.link}
                 sx={{color: 'white', display: 'block', fontSize: 12 }}                
@@ -190,10 +190,10 @@ const MobileLinkMenu: React.FC = () => {
       onClose={handleCloseUserMenu}
     >
       {pages.map((page) => (
-        <Link href={page.link} key={page.link}>
-        <MenuItem onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">{page.label}</Typography>
-        </MenuItem>
+        <Link href={page.link} key={page.link} prefetch={false}>
+          <MenuItem onClick={handleCloseUserMenu}>
+              <Typography textAlign="center">{page.label}</Typography>
+          </MenuItem>
         </Link>
       ))}
     </Menu>

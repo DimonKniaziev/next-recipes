@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Header from "@/componens/header";
-import Link from 'next/link'
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -27,7 +26,7 @@ export default function RootLayout({
         <header>
           <Header/>
         </header>
-        {modal}     
+        {modal}
         {children}
       </body>
     </html>
